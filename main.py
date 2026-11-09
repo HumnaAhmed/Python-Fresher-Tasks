@@ -1,50 +1,33 @@
+from typing import Dict, List
 
-class StudentManager:
+class InventoryManager:
 
-    def __init__(self, course_name):
-        self.course_name = course_name
-        self.__students = []
+    def __init__(self):
+        self.__items: Dict[int, Dict] = {}  # Encapsulated dictionary storage
+        self.__counter = 1000
 
-    def add_student(self, name, score):
-        if 0 <= score <= 100:
-            self.__students.append({"name": name, "score": score})
-            print(f"[SUCCESS] Added {name} (Score: {score}) to {self.course_name}")
-        else:
-            raise ValueError("Score must be between 0 and 100")
+    def add_item(self, name: str, quantity: int, price: float) -> int:
+        if quantity < 0 or price < 0:
+            raise ValueError("[ERROR] Quantity and price must be non-negative values.")
+        item_id = self.__counter
+        self.__items[item_id] = {"name": name, "quantity": quantity, "price": price}
+        self.__counter += 1
+        print(f"[SUCCESS] Added item '{name}' with ID {item_id}")
+        return item_id
 
-    def get_top_performers(self, threshold=80):
-        return [s["name"] for s in self.__students if s["score"] >= threshold]
-
-
-def safe_divide(numerator, denominator):
-    try:
-        result = numerator / denominator
-    except ZeroDivisionError:
-        print("[ERROR] Division by zero is undefined.")
-        return None
-    except TypeError:
-        print("[ERROR] Both inputs must be numerical.")
-        return None
-    else:
-        print(f"[RESULT] {numerator} / {denominator} = {result}")
-        return result
-    finally:
-        print("[LOG] Division operation completed.")
+    def get_inventory_valuation(self) -> float:
+        total_value = sum(item["quantity"] * item["price"] for item in self.__items.values())
+        print(f"[VALUATION] Total Inventory Asset Value: ${total_value:.2f}")
+        return total_value
 
 
 if __name__ == "__main__":
-    print("=== TASK 2: CORE CONCEPTS & SKILLS EXECUTION ===")
+    print("=== TASK 3: PRACTICAL IMPLEMENTATION PROJECT ===")
+    manager = InventoryManager()
 
-    manager = StudentManager("Python Development")
-    manager.add_student("Humna", 95)
-    manager.add_student("Ali", 78)
-    manager.add_student("Sara", 88)
+    manager.add_item("Dell Latitude 5430 Laptop", 5, 850.00)
+    manager.add_item("Wireless Mechanical Keyboard", 15, 45.50)
+    manager.add_item("USB-C Docking Station", 8, 120.00)
 
-    top_students = manager.get_top_performers(80)
-    print(f"Top Performers (Score >= 80): {top_students}")
-
-    print("\n=== EXCEPTION HANDLING DEMO ===")
-    safe_divide(100, 5)
-    safe_divide(10, 0)
-
-    print("\n=== PROCESS COMPLETED SUCCESSFULLY ===")
+    manager.get_inventory_valuation()
+    print("=== PRACTICAL IMPLEMENTATION COMPLETED SUCCESSFULLY ===")
